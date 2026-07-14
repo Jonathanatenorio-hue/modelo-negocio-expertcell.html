@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de Negocio — ExpertCell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1B2E;
+    --navy-2:#10253D;
+    --navy-3:#16304E;
+    --electric:#2D9CDB;
+    --electric-soft:#7FC4EC;
+    --orange:#FF7200;
+    --ink:#EAF2FA;
+    --ink-dim:#9FB4C8;
+    --line:rgba(127,196,236,.18);
+    --card:rgba(45,156,219,.07);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Public Sans',sans-serif;
+    background:var(--navy);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px}
+  h1,h2,h3{font-family:'Archivo',sans-serif}
+
+  header{
+    padding:72px 0 56px;
+    background:
+      radial-gradient(1100px 480px at 85% -10%, rgba(45,156,219,.22), transparent 60%),
+      radial-gradient(700px 380px at -10% 110%, rgba(255,114,0,.10), transparent 60%),
+      var(--navy);
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--electric-soft);
+    margin-bottom:22px;
+  }
+  .eyebrow::before{content:"";width:34px;height:2px;background:var(--orange)}
+  h1{
+    font-size:clamp(34px,5.4vw,54px);
+    font-weight:900;line-height:1.06;letter-spacing:-.02em;
+    margin-bottom:18px;
+  }
+  h1 em{font-style:normal;color:var(--electric)}
+  .hero-sub{font-size:18px;color:var(--ink-dim);max-width:600px}
+  .hero-meta{
+    margin-top:30px;display:flex;gap:26px;flex-wrap:wrap;
+    font-size:13px;color:var(--ink-dim);
+  }
+  .hero-meta strong{color:var(--ink);font-weight:600}
+
+  .thesis{
+    background:linear-gradient(90deg, var(--navy-2), var(--navy-3));
+    border-bottom:1px solid var(--line);
+    padding:34px 0;
+  }
+  .thesis p{
+    font-family:'Archivo',sans-serif;
+    font-size:clamp(18px,2.6vw,23px);
+    font-weight:600;line-height:1.45;letter-spacing:-.01em;
+  }
+  .thesis .hl{color:var(--orange)}
+  .thesis .hl2{color:var(--electric)}
+
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  .sec-label{
+    font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--orange);
+    margin-bottom:10px;
+  }
+  h2{font-size:clamp(24px,3.4vw,32px);font-weight:800;letter-spacing:-.015em;margin-bottom:14px}
+  .lead{color:var(--ink-dim);font-size:16.5px;max-width:640px;margin-bottom:34px}
+  .lead strong{color:var(--ink)}
+
+  .flow{display:flex;flex-direction:column;gap:0;margin-top:8px}
+  .flow-step{
+    display:grid;grid-template-columns:64px 1fr;gap:22px;
+    padding:24px 0;position:relative;
+  }
+  .flow-step:not(:last-child)::after{
+    content:"";position:absolute;left:31px;top:76px;bottom:-6px;
+    width:2px;background:linear-gradient(var(--electric), rgba(45,156,219,.15));
+  }
+  .flow-dot{
+    width:64px;height:64px;border-radius:16px;
+    background:var(--card);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;position:relative;z-index:1;
+  }
+  .flow-step:last-child .flow-dot{background:rgba(255,114,0,.12);border-color:rgba(255,114,0,.4)}
+  .flow-step h3{font-size:18px;font-weight:700;margin-bottom:6px}
+  .flow-step h3 span{color:var(--electric-soft);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:4px}
+  .flow-step p{color:var(--ink-dim);font-size:15px;max-width:600px}
+  .flow-step p b{color:var(--ink);font-weight:600}
+
+  .org{display:flex;flex-direction:column;align-items:center;gap:0;margin-top:10px}
+  .org-node{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 26px;text-align:center;min-width:230px;
+  }
+  .org-node .role{font-family:'Archivo',sans-serif;font-weight:700;font-size:16px}
+  .org-node .desc{font-size:13px;color:var(--ink-dim);margin-top:3px}
+  .org-node.hot{border-color:rgba(255,114,0,.5);background:rgba(255,114,0,.08)}
+  .org-node.hot .role{color:var(--orange)}
+  .org-link{width:2px;height:26px;background:var(--electric);opacity:.5}
+  .org-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+  .org-row .org-node{min-width:190px}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px;
+  }
+  .card h3{font-size:16px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .card h3::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--electric);flex:none}
+  .card p{font-size:14.5px;color:var(--ink-dim)}
+  .card p b{color:var(--ink);font-weight:600}
+  .card.accent{border-color:rgba(255,114,0,.4)}
+  .card.accent h3::before{background:var(--orange)}
+
+  .role-list{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+  .role-item{
+    display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 22px;
+  }
+  .role-item .check{
+    width:28px;height:28px;border-radius:8px;flex:none;margin-top:2px;
+    background:rgba(45,156,219,.15);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--electric);font-weight:800;font-size:14px;
+  }
+  .role-item p{font-size:15px;color:var(--ink-dim)}
+  .role-item p b{color:var(--ink);font-weight:600}
+
+  .closing{
+    padding:60px 0 72px;text-align:center;
+    background:
+      radial-gradient(700px 320px at 50% 120%, rgba(255,114,0,.12), transparent 65%),
+      var(--navy);
+  }
+  .closing .quote{
+    font-family:'Archivo',sans-serif;font-size:clamp(20px,3vw,27px);
+    font-weight:700;line-height:1.4;max-width:700px;margin:0 auto 14px;
+    letter-spacing:-.01em;
+  }
+  .closing .quote .hl{color:var(--orange)}
+  .closing .sig{font-size:13px;color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase}
+
+  footer{padding:22px 0;text-align:center;font-size:12px;color:var(--ink-dim);border-top:1px solid var(--line)}
+  footer b{color:var(--electric-soft)}
+
+  @media (max-width:560px){
+    .flow-step{grid-template-columns:52px 1fr;gap:14px}
+    .flow-dot{width:52px;height:52px;font-size:22px}
+    .flow-step:not(:last-child)::after{left:25px;top:64px}
+    .org-node{min-width:0;width:100%}
+    .org-row{width:100%}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    header .wrap > *{animation:rise .6s ease both}
+    header .wrap > *:nth-child(2){animation-delay:.08s}
+    header .wrap > *:nth-child(3){animation-delay:.16s}
+    header .wrap > *:nth-child(4){animation-delay:.24s}
+    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">ExpertCell · Distribuidor Autorizado AT&amp;T</div>
+    <h1>Así funciona<br>nuestro <em>negocio</em></h1>
+    <p class="hero-sub">Guía de bienvenida para coordinación. Todo lo que necesitas entender de nuestro modelo, en una sola página.</p>
+    <div class="hero-meta">
+      <div><strong>Operaciones:</strong> CC2 Antequera · JV</div>
+      <div><strong>Ubicación:</strong> Puebla, México</div>
+      <div><strong>Julio 2026</strong></div>
+    </div>
+  </div>
+</header>
+
+<div class="thesis">
+  <div class="wrap">
+    <p>Vendemos servicios de AT&amp;T por teléfono. Ganamos <span class="hl">por comisión</span>. Todo el negocio depende de que <span class="hl2">cada agente cumpla su meta, cada día</span>.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">01 · El modelo</div>
+    <h2>Somos socios comerciales de AT&amp;T</h2>
+    <p class="lead">AT&amp;T no nos paga un sueldo fijo: nos paga <strong>comisiones por cada venta activada</strong>. Somos su fuerza de ventas externa especializada en telemarketing. Si vendemos, hay ingreso. Si no vendemos, no hay nada que repartir.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>Qué vendemos</h3>
+        <p>Principalmente <b>renovaciones de planes</b>, <b>líneas adicionales</b> y equipos, a clientes de la marca AT&amp;T.</p>
+      </div>
+      <div class="card">
+        <h3>A quién le vendemos</h3>
+        <p>A clientes de AT&amp;T cuyo plan está por vencer o que pueden contratar más líneas, a partir de <b>bases que nosotros mismos generamos y depuramos</b>. El cliente ya conoce la marca.</p>
+      </div>
+      <div class="card accent">
+        <h3>Cómo ganamos</h3>
+        <p><b>Comisión por venta activada.</b> De ahí sale la nómina, las comisiones de agentes y supervisores, y la utilidad de la empresa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">02 · El flujo</div>
+    <h2>Del lead a la comisión</h2>
+    <p class="lead">Cuatro pasos. En cada uno se puede ganar o perder dinero, y el trabajo de coordinación es que <strong>nada se caiga en el camino</strong>.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot">📋</div>
+        <div>
+          <h3><span>Paso 1</span>Nosotros generamos nuestras bases de clientes</h3>
+          <p>ExpertCell obtiene y depura sus propias bases de leads: clientes por renovar o con potencial de líneas adicionales. <b>Cada lead nos cuesta conseguirlo:</b> desperdiciarlo es tirar dinero.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">📞</div>
+        <div>
+          <h3><span>Paso 2</span>Los agentes contactan y venden</h3>
+          <p>Llamada, oferta, cotización del equipo y cierre. Aquí importan la <b>contactabilidad</b>, la <b>calidad de la llamada</b> y el <b>seguimiento</b> de cada lead en el CRM.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">✅</div>
+        <div>
+          <h3><span>Paso 3</span>La venta se activa y se confirma</h3>
+          <p>Una venta cerrada no es una venta cobrada. Hay que cuidar que <b>no se cancele ni se caiga</b>: el seguimiento de canceladas es parte del negocio, no un trámite.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">💰</div>
+        <div>
+          <h3><span>Paso 4</span>AT&amp;T paga la comisión</h3>
+          <p>Solo las ventas activadas y sostenidas generan ingreso. <b>Esta comisión es el único ingreso de la empresa.</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">03 · La estructura</div>
+    <h2>Cómo estamos organizados</h2>
+    <p class="lead">Una cadena corta y clara. Cada nivel existe para que el siguiente venda más y mejor.</p>
+    <div class="org">
+      <div class="org-node">
+        <div class="role">Dirección</div>
+        <div class="desc">Estrategia, metas y resultados globales</div>
+      </div>
+      <div class="org-link"></div>
+      <div class="org-node hot">
+        <div class="role">Coordinación</div>
+        <div class="desc">Tu rol: asegurar la ejecución diaria de la operación</div>
+      </div>
+      <div class="org-link"></div>
+      <div class="org-node">
+        <div class="role">Supervisores</div>
+        <div class="desc">Cada uno lidera y da seguimiento a su equipo</div>
+      </div>
+      <div class="org-link"></div>
+      <div class="org-row">
+        <div class="org-node">
+          <div class="role">Agentes</div>
+          <div class="desc">Quienes venden — el corazón del negocio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">04 · Tu rol</div>
+    <h2>Qué esperamos de coordinación</h2>
+    <p class="lead">El coordinador no vende directamente: <strong>hace que la venta suceda todos los días</strong>. Estas son las cuatro responsabilidades clave.</p>
+    <div class="role-list">
+      <div class="role-item">
+        <div class="check">1</div>
+        <p><b>Seguimiento diario a supervisores.</b> Que cada supervisor sepa cómo va su equipo contra la meta, hoy — no al final del mes.</p>
+      </div>
+      <div class="role-item">
+        <div class="check">2</div>
+        <p><b>Cumplimiento de metas.</b> Las metas se asignan por agente y por supervisor cada mes. Tu tablero es el avance diario contra esas metas.</p>
+      </div>
+      <div class="role-item">
+        <div class="check">3</div>
+        <p><b>Cuidar cada venta hasta el final.</b> Detectar leads caídos, dar seguimiento a canceladas y evitar que ventas ya ganadas se pierdan.</p>
+      </div>
+      <div class="role-item">
+        <div class="check">4</div>
+        <p><b>Desarrollar al equipo.</b> Retroalimentación constante, reconocimiento a lo bueno y corrección temprana de lo que no funciona.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <div class="wrap">
+    <p class="quote">"Cada llamada es una oportunidad, cada venta es ingreso, y <span class="hl">cada meta cumplida</span> es lo que mantiene vivo este negocio."</p>
+    <p class="sig">Bienvenida al equipo · ExpertCell</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap"><b>ExpertCell</b> · Distribuidor Autorizado AT&amp;T · Documento interno de inducción · Julio 2026</div>
+</footer>
+
+</body>
+</html>
